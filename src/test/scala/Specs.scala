@@ -1,4 +1,4 @@
-import org.proofcafe
+import org.proofcafe.nfcdemo
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.Spec
 

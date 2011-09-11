@@ -1,4 +1,4 @@
-<manifest package="org.proofcafe.tests" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="org.proofcafe.nfcdemo.tests" xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-sdk android:minSdkVersion="10"></uses-sdk>
     <application>
         <uses-library android:name="android.test.runner"></uses-library>
@@ -10,6 +10,6 @@
         </activity>
     </application>
     <instrumentation 
-    android:label="Tests" android:targetPackage="org.proofcafe" android:name="android.test.InstrumentationTestRunner">
+    android:label="Tests" android:targetPackage="org.proofcafe.nfcdemo" android:name="android.test.InstrumentationTestRunner">
 </instrumentation>
 </manifest>
