@@ -17,7 +17,9 @@ object General {
     TypedResources.settings ++
     AndroidMarketPublish.settings ++ Seq (
       keyalias in Android := "change-me",
-      libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test"
+      libraryDependencies ++= Seq(
+        "org.scalatest" %% "scalatest" % "1.6.1" % "test"
+      )
     )
 }
 
