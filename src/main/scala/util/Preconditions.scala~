@@ -1,0 +1,4 @@
+package org.proofcafe.nfcdemo.util
+
+object Precondition {
+}
