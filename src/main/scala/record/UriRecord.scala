@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.util.Log
 
+import org.proofcafe.nfcdemo.util.Preconditions
+
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import scala.collection.immutable.HashMap
@@ -21,7 +23,7 @@ class UriRecord(uri : Uri) extends ParsedNdefRecord {
   val TAG = "UriRecord"
   val RECORD_TYPE = "UriRecord"
 
-  private val mUri = uri //Preconditions.checkNotNull(uri);
+  private val mUri = Preconditions.checkNotNull(uri);
 
   def getView(activity : Activity, inflater : LayoutInflater, parent : ViewGroup, offset : Int) = {
     val text : TextView = new TextView(activity) //TODO inflater.inflate("Text", parent, false);
@@ -108,9 +110,8 @@ object UriRecord {
 
   /** Parse an well known URI record */
   private def parseWellKnown(record : NdefRecord) = {
-    //Preconditions.checkArgument(Arrays.equals(record.getType(), NdefRecord.RTD_URI));
+    Preconditions.checkArgument(Arrays.equals(record.getType(), NdefRecord.RTD_URI));
     val payload = record.getPayload()
-    Log.d("TAG", "payload[0]="+payload(0))
     /*
      * payload[0] contains the URI Identifier Code, per the
      * NFC Forum "URI Record Type Definition" section 3.2.2.

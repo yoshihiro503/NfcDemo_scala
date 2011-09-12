@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.util.Log
+
+import org.proofcafe.nfcdemo.util.Preconditions
 
 import java.nio.charset.Charset;
 import java.util.Locale;
@@ -25,32 +28,38 @@ class FakeTagsActivity extends ListActivity {
 
   var mAdapter : ArrayAdapter[TagDescription] = null;
 
-    override def onCreate(savedState : Bundle) {
-      super.onCreate(savedState);
-      val adapter = new ArrayAdapter[TagDescription](this, android.R.layout.simple_list_item_1, android.R.id.text1)
-        
-      adapter.add(
-        new TagDescription("Broadcast NFC Text Tag", MockNdefMessages.ENGLISH_PLAIN_TEXT));
-      adapter.add(new TagDescription(
-        "Broadcast NFC SmartPoster URL & text", MockNdefMessages.SMART_POSTER_URL_AND_TEXT));
-      adapter.add(new TagDescription(
-        "Broadcast NFC SmartPoster URL", MockNdefMessages.SMART_POSTER_URL_NO_TEXT));
-      setListAdapter(adapter);
-      mAdapter = adapter;
-    }
+  override def onCreate(savedState : Bundle) {
+    super.onCreate(savedState)
+    val adapter = new ArrayAdapter[TagDescription](this, android.R.layout.simple_list_item_1, android.R.id.text1)
+    
+    adapter.add(new TagDescription(
+      "Broadcast NFC Text Tag",
+      MockNdefMessages.ENGLISH_PLAIN_TEXT
+    ))
+    adapter.add(new TagDescription(
+      "Broadcast NFC SmartPoster URL & text",
+      MockNdefMessages.SMART_POSTER_URL_AND_TEXT
+    ))
+    adapter.add(new TagDescription(
+      "Broadcast NFC SmartPoster URL",
+      MockNdefMessages.SMART_POSTER_URL_NO_TEXT
+    ))
+    setListAdapter(adapter)
+    mAdapter = adapter
+  }
 
-    override def onListItemClick(l : ListView, v : View, position : Int, id : Long) {
-      val description = mAdapter.getItem(position)
-      val intent = new Intent(NfcAdapter.ACTION_TAG_DISCOVERED)
-      intent.putExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, description.msgs)
-      startActivity(intent)
-    }
+  override def onListItemClick(l: ListView, v: View, position: Int, id: Long) {
+    val description = mAdapter.getItem(position)
+    val intent = new Intent(NfcAdapter.ACTION_TAG_DISCOVERED)
+    intent.putExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, description.msgs)
+    startActivity(intent)
+  }
 }
 
 object FakeTagsActivity {
   def newTextRecord(text : String, locale : Locale, encodeInUtf8 : Boolean) = {
-        // Preconditions.checkNotNull(text);
-        // Preconditions.checkNotNull(locale);
+    Preconditions.checkNotNull(text);
+    Preconditions.checkNotNull(locale);
     val langBytes = locale.getLanguage().getBytes(Charset.forName("US_ASCII"));
     val utfEncoding = if (encodeInUtf8)  Charset.forName("UTF_8") else Charset.forName("UTF-16")
     val textBytes = text.getBytes(utfEncoding);
@@ -61,8 +70,8 @@ object FakeTagsActivity {
   }
 
   def newMimeRecord(typ : String, data : Array[Byte]) = {
-    // Preconditions.checkNotNull(typ);
-    // Preconditions.checkNotNull(data);
+    Preconditions.checkNotNull(typ);
+    Preconditions.checkNotNull(data);
     val typeBytes = typ.getBytes(Charset.forName("US_ASCII"));
     new NdefRecord(NdefRecord.TNF_MIME_MEDIA, typeBytes, Array[Byte](), data);
   }

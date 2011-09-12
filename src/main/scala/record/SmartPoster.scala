@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
-import org.proofcafe.nfcdemo.NdefMessageParser;
+import org.proofcafe.nfcdemo.NdefMessageParser
+import org.proofcafe.nfcdemo.util.Preconditions
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -39,7 +40,7 @@ class SmartPoster private (uri: UriRecord, title: TextRecord, action: SmartPoste
    * records are just metadata about this record. There MUST be one URI record
    * and there MUST NOT be more than one."
    */
-  private val mUriRecord : UriRecord = uri //Preconditions.checkNotNull(uri)
+  private val mUriRecord : UriRecord = Preconditions.checkNotNull(uri)
 
   /**
    * NFC Forum Smart Poster Record Type Definition section 3.2.1.
@@ -52,7 +53,7 @@ class SmartPoster private (uri: UriRecord, title: TextRecord, action: SmartPoste
    * the UI designer may ignore it, but doing so will induce a different user
    * experience from device to device."
    */
-  private val mAction : RecommendedAction = action //Preconditions.checkNotNull(action)
+  private val mAction : RecommendedAction = Preconditions.checkNotNull(action)
 
   /**
    * NFC Forum Smart Poster Record Type Definition section 3.2.1.
@@ -92,8 +93,8 @@ class SmartPoster private (uri: UriRecord, title: TextRecord, action: SmartPoste
 
 object SmartPoster {
     def parse(record : NdefRecord) : SmartPoster = {
-        // Preconditions.checkArgument(record.getTnf() == NdefRecord.TNF_WELL_KNOWN);
-        // Preconditions.checkArgument(Arrays.equals(record.getType(), NdefRecord.RTD_SMART_POSTER));
+      Preconditions.checkArgument(record.getTnf() == NdefRecord.TNF_WELL_KNOWN);
+      Preconditions.checkArgument(Arrays.equals(record.getType(), NdefRecord.RTD_SMART_POSTER));
         try {
             val subRecords = new NdefMessage(record.getPayload());
             parse(subRecords.getRecords());
@@ -112,7 +113,8 @@ object SmartPoster {
               case List(uri:UriRecord) => uri
               case _ => throw new IllegalArgumentException()
             }
-          val title = getFirstIfExists[TextRecord](records)
+          val title =
+            getFirstIfExists(records, classOf[TextRecord]).orNull
           val action = parseRecommendedAction(recordsRaw)
           val typ = parseType(recordsRaw);
           new SmartPoster(uri, title, action, typ);
@@ -135,10 +137,10 @@ object SmartPoster {
    * Returns the first element of {@code elements} which is an instance of
    * {@code type}, or {@code null} if no such element exists.
    */
-  private def getFirstIfExists[T >: Null](elements: List[_]): T =
+  private def getFirstIfExists[T](elements: List[Any], t: Class[T]): Option[T] =
       elements match {
-        case (x:T) :: xs => x
-        case _ => null
+        case x :: xs if (t.isInstance(x)) => Some(t.cast(x))
+        case _ => None
       }
 
   private def getByType(typ : Array[Byte], records : Array[NdefRecord]) : NdefRecord = {

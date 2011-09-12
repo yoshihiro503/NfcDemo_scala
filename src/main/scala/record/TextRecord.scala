@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.proofcafe.nfcdemo.util.Preconditions
+
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
@@ -16,9 +18,9 @@ import java.util.Arrays;
 class TextRecord private (languageCode : String, text : String) extends ParsedNdefRecord {
 
   /** ISO/IANA language code */
-  private val mLanguageCode = languageCode //Preconditions.checkNotNull(languageCode);
+  private val mLanguageCode = Preconditions.checkNotNull(languageCode);
 
-  private val mText = text //Preconditions.checkNotNull(text);
+  private val mText = Preconditions.checkNotNull(text);
 
   def getView(activity : Activity, inflater : LayoutInflater, parent : ViewGroup, offset : Int) = {
     val text : TextView = new TextView(activity) //TODO (TextView) inflater.inflate(R.layout.tag_text, parent, false);
@@ -41,8 +43,8 @@ object TextRecord {
 
   // TODO: deal with text fields which span multiple NdefRecords
   def parse(record : NdefRecord) : TextRecord = {
-    // Preconditions.checkArgument(record.getTnf() == NdefRecord.TNF_WELL_KNOWN);
-    // Preconditions.checkArgument(Arrays.equals(record.getType(), NdefRecord.RTD_TEXT));
+    Preconditions.checkArgument(record.getTnf() == NdefRecord.TNF_WELL_KNOWN);
+    Preconditions.checkArgument(Arrays.equals(record.getType(), NdefRecord.RTD_TEXT));
     try {
       val payload = record.getPayload();
       /*
